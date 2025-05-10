@@ -1,235 +1,97 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hệ thống Chẩn đoán Vết thương Ngoài da</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-    />
-    <style>
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      }
-      .hero {
-        background-color: #f8f9fa;
-        padding: 60px 0;
-        margin-bottom: 30px;
-      }
-      .feature-card {
-        border: none;
-        transition: transform 0.3s;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-      }
-      .feature-card:hover {
-        transform: translateY(-10px);
-      }
-      .feature-card .card-body {
-        padding: 25px;
-      }
-      .feature-icon {
-        font-size: 48px;
-        margin-bottom: 20px;
-        color: #0d6efd;
-      }
-      .navbar {
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      }
-      .footer {
-        margin-top: 50px;
-        padding: 20px 0;
-        background-color: #f8f9fa;
-      }
-      .auth-dropdown-menu {
-        right: 0;
-        left: auto;
-      }
-      .actor {
-        color: white;
-      }
-      #userDropdown {
-        color: white;
-      }
-    </style>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <div class="container">
-        <a class="navbar-brand" href="/">
-          <i class="fas fa-bandage me-2"></i>
-          Chẩn đoán Vết thương
-        </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a class="nav-link actor" href="/"
-                ><i class="fas fa-home me-1"></i> Trang chủ</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/upload"
-                ><i class="fas fa-upload me-1"></i> Chẩn đoán</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/chatbot"
-                ><i class="fas fa-comments me-1"></i> Hỗ trợ</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/history"
-                ><i class="fas fa-history me-1"></i> Lịch sử</a
-              >
-            </li>
-          </ul>
+<head>
+    <meta charset="UTF-8">
+    <title>Dự đoán giá xe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Dự đoán giá xe</h2>
 
-          <!-- Hiển thị thông tin người dùng khi đã đăng nhập -->
-          {% if user %}
-          <div class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="userDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="fas fa-user-circle me-1"></i> {{ user.full_name or
-              user.username }}
-            </a>
-            <ul
-              class="dropdown-menu dropdown-menu-end auth-dropdown-menu"
-              aria-labelledby="userDropdown"
-            >
-              <li>
-                <a class="dropdown-item" href="/profile"
-                  ><i class="fas fa-id-card me-2"></i>Thông tin cá nhân</a
-                >
-              </li>
-              <li>
-                <a class="dropdown-item" href="/change-password"
-                  ><i class="fas fa-key me-2"></i>Đổi mật khẩu</a
-                >
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a class="dropdown-item" href="/logout"
-                  ><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a
-                >
-              </li>
-            </ul>
-          </div>
-          {% else %}
-          <div class="d-flex">
-            <a href="/login" class="btn btn-primary me-2"
-              ><i class="fas fa-sign-in-alt me-1"></i>Đăng nhập</a
-            >
-            <a href="/register" class="btn btn-primary"
-              ><i class="fas fa-user-plus me-1"></i>Đăng ký</a
-            >
-          </div>
-          {% endif %}
-        </div>
-      </div>
-    </nav>
-
-    <div class="container mt-4">
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %} {% for category, message in messages %}
-      <div
-        class="alert alert-{{ category }} alert-dismissible fade show"
-        role="alert"
-      >
-        {{ message }}
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-          aria-label="Close"
-        ></button>
-      </div>
-      {% endfor %} {% endif %} {% endwith %}
+    {% if prediction %}
+    <div class="alert alert-success">
+        Giá dự đoán: <strong>{{ prediction | int | string }} VND</strong>
     </div>
+    {% endif %}
 
-    <section class="hero">
-      <div class="container text-center">
-        <h1>Chào mừng đến với Hệ thống Chẩn đoán Vết thương Ngoài da</h1>
-        <p class="lead mt-3">
-          Hệ thống sử dụng trí tuệ nhân tạo để phân tích và chẩn đoán các vết
-          thương ngoài da, cung cấp lời khuyên và hướng dẫn sơ cấp cứu ban đầu.
-        </p>
-      </div>
-    </section>
-
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card feature-card">
-            <div class="card-body text-center">
-              <div class="feature-icon">
-                <i class="fas fa-search-plus"></i>
-              </div>
-              <h4 class="card-title">Chẩn đoán</h4>
-              <p class="card-text">
-                Tải lên hình ảnh vết thương để nhận chẩn đoán và lời khuyên.
-              </p>
-              <a href="/upload" class="btn btn-primary">Bắt đầu</a>
-            </div>
-          </div>
+    <form method="POST">
+        <!-- Hãng xe -->
+        <div class="mb-3">
+            <label for="company" class="form-label">Hãng xe</label>
+            <select name="company" id="company" class="form-select" required>
+                <option value="">Chọn hãng xe</option>
+                {% for c in feature_values['company'] %}
+                <option value="{{ c }}">{{ c }}</option>
+                {% endfor %}
+            </select>
         </div>
-        <div class="col-md-4">
-          <div class="card feature-card">
-            <div class="card-body text-center">
-              <div class="feature-icon">
-                <i class="fas fa-robot"></i>
-              </div>
-              <h4 class="card-title">Hỗ trợ</h4>
-              <p class="card-text">
-                Trò chuyện với trợ lý ảo về vết thương ngoài da và cách xử lý.
-              </p>
-              <a href="/chatbot" class="btn btn-primary">Trò chuyện</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card feature-card">
-            <div class="card-body text-center">
-              <div class="feature-icon">
-                <i class="fas fa-history"></i>
-              </div>
-              <h4 class="card-title">Lịch sử</h4>
-              <p class="card-text">
-                Xem lại các chẩn đoán trước đó và theo dõi tiến trình.
-              </p>
-              <a href="/history" class="btn btn-primary">Xem lịch sử</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <footer class="footer">
-      <div class="container text-center">
-        <p>Hệ thống Chẩn đoán Vết thương Ngoài da</p>
-      </div>
-    </footer>
+        <!-- Dòng xe -->
+        <div class="mb-3">
+            <label for="model" class="form-label">Dòng xe</label>
+            <select name="model" id="model" class="form-select" required>
+                <option value="">Chọn dòng xe</option>
+                {% for m in feature_values['model'] %}
+                <option value="{{ m }}">{{ m }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+        <!-- Nhiên liệu -->
+        <div class="mb-3">
+            <label for="fuel_type" class="form-label">Nhiên liệu</label>
+            <select name="fuel_type" id="fuel_type" class="form-select" required>
+                {% for f in feature_values['fuel_type'] %}
+                <option value="{{ f }}">{{ f }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Kiểu bán -->
+        <div class="mb-3">
+            <label for="seller_type" class="form-label">Kiểu bán</label>
+            <select name="seller_type" id="seller_type" class="form-select" required>
+                {% for s in feature_values['seller_type'] %}
+                <option value="{{ s }}">{{ s }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Truyền động -->
+        <div class="mb-3">
+            <label for="transmission" class="form-label">Truyền động</label>
+            <select name="transmission" id="transmission" class="form-select" required>
+                {% for t in feature_values['transmission'] %}
+                <option value="{{ t }}">{{ t }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Chủ sở hữu -->
+        <div class="mb-3">
+            <label for="owner" class="form-label">Chủ sở hữu</label>
+            <select name="owner" id="owner" class="form-select" required>
+                {% for o in feature_values['owner'] %}
+                <option value="{{ o }}">{{ o }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Số năm sử dụng -->
+        <div class="mb-3">
+            <label for="car_age" class="form-label">Số năm sử dụng</label>
+            <input type="number" class="form-control" name="car_age" id="car_age" required min="1">
+        </div>
+
+        <!-- Km đã đi -->
+        <div class="mb-3">
+            <label for="km_driven" class="form-label">Km đã đi</label>
+            <input type="number" class="form-control" name="km_driven" id="km_driven" required min="0">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Dự đoán</button>
+    </form>
+</div>
+</body>
 </html>

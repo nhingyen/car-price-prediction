@@ -18,3 +18,9 @@ venv/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Bỏ qua file CSV
+*.csv
+
+# Bỏ qua file JSON
+*.json
