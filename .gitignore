@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environment
+venv/
+
+# Models (machine learning)
+*.pkl
+
+# Jupyter/Colab
+.ipynb_checkpoints/
+
+# VS Code (nếu dùng)
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
