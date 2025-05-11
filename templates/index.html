@@ -11,7 +11,7 @@
 
     {% if prediction %}
     <div class="alert alert-success">
-        Giá dự đoán: <strong>{{ prediction | int | string }} VND</strong>
+       Giá dự đoán: <strong>{{ "{:,.0f}".format(prediction) }} VND</strong>
     </div>
     {% endif %}
 
@@ -27,16 +27,14 @@
             </select>
         </div>
 
-        <!-- Dòng xe -->
-        <div class="mb-3">
-            <label for="model" class="form-label">Dòng xe</label>
-            <select name="model" id="model" class="form-select" required>
-                <option value="">Chọn dòng xe</option>
-                {% for m in feature_values['model'] %}
-                <option value="{{ m }}">{{ m }}</option>
-                {% endfor %}
-            </select>
-        </div>
+<!-- Dòng xe -->
+<div class="mb-3">
+    <label for="model" class="form-label">Dòng xe</label>
+    <select name="model" id="model" class="form-select" required>
+        <option value="">Chọn dòng xe</option>
+    </select>
+</div>
+
 
         <!-- Nhiên liệu -->
         <div class="mb-3">
@@ -93,5 +91,31 @@
         <button type="submit" class="btn btn-primary">Dự đoán</button>
     </form>
 </div>
+
+<script>
+const featureValues = {{ feature_values | tojson | safe }};
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const companySelect = document.getElementById('company');
+        const modelSelect = document.getElementById('model');
+
+        companySelect.addEventListener('change', function () {
+            const selectedCompany = this.value;
+            const models = featureValues.model[selectedCompany] || [];
+
+            // Xóa các option hiện tại
+            modelSelect.innerHTML = '<option value="">Chọn dòng xe</option>';
+
+            // Thêm các option mới
+            models.forEach(function (model) {
+                const option = document.createElement('option');
+                option.value = model;
+                option.textContent = model;
+                modelSelect.appendChild(option);
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

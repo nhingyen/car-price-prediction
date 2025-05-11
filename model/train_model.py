@@ -10,6 +10,7 @@ from xgboost import XGBRegressor
 import joblib
 import optuna
 import os
+from sklearn.metrics import mean_squared_error, r2_score
 
 # --- Load data ---
 car = pd.read_csv('D:\MachineLearning\project-final\dataset-kaggle\Car details v3.csv')
@@ -101,3 +102,8 @@ kmeans_path = os.path.join(base_dir, 'model', 'car_price_kmeans.pkl')
 joblib.dump(best_model, model_path)
 joblib.dump(kmeans, kmeans_path)
 print(f"✅ Model saved to {model_path}")
+
+# Evaluate
+# y_pred = best_model.predict(X_test)
+# print("\n📊 Test R²:", r2_score(y_test, y_pred))
+# print("📊 Test RMSE:", np.sqrt(mean_squared_error(y_test, y_pred)))
