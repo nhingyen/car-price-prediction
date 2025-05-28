@@ -66,6 +66,17 @@ def index():
             'model_cluster': model_cluster,
             'company_fuel_owner': company_fuel_owner
         }])
+       
+        # # ✅ FIX: Chuyển object → category
+        # for col in input_df.select_dtypes(include='object').columns:
+        #     input_df[col] = input_df[col].astype('category')
+
+        # # --- Encode đầu vào giống lúc huấn luyện ---
+        # encoded_input = pd.get_dummies(input_df)
+        # encoded_input = encoded_input.reindex(columns=model.feature_names_in_, fill_value=0)
+
+        # # --- Dự đoán ---
+        # predicted_price = model.predict(encoded_input)[0]
 
         # --- Dự đoán ---
         predicted_price = model.predict(input_df)[0]

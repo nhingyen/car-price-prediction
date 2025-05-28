@@ -95,15 +95,15 @@ best_model = Pipeline([
 best_model.fit(X_train, y_train)
 
 # Save model & kmeans
-base_dir = os.path.dirname(__file__)  # Thư mục chứa train_model.py
-model_path = os.path.join(base_dir, 'model', 'car_price_model.pkl')
-kmeans_path = os.path.join(base_dir, 'model', 'car_price_kmeans.pkl')
+# base_dir = os.path.dirname(__file__)  # Thư mục chứa train_model.py
+# model_path = os.path.join(base_dir, 'model', 'car_price_model.pkl')
+# kmeans_path = os.path.join(base_dir, 'model', 'car_price_kmeans.pkl')
 
-joblib.dump(best_model, model_path)
-joblib.dump(kmeans, kmeans_path)
-print(f"✅ Model saved to {model_path}")
+# joblib.dump(best_model, model_path)
+# joblib.dump(kmeans, kmeans_path)
+# print(f"✅ Model saved to {model_path}")
 
 # Evaluate
-# y_pred = best_model.predict(X_test)
-# print("\n📊 Test R²:", r2_score(y_test, y_pred))
-# print("📊 Test RMSE:", np.sqrt(mean_squared_error(y_test, y_pred)))
+y_pred = best_model.predict(X_test)
+print("\n📊 Test R²:", r2_score(y_test, y_pred))
+print("📊 Test RMSE:", np.sqrt(mean_squared_error(y_test, y_pred)))

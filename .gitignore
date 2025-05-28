@@ -24,3 +24,9 @@ Thumbs.db
 
 # Bỏ qua file JSON
 *.json
+
+# Node.js/TypeScript
+node_modules/
+*.js
+*.js.map
+dist/
