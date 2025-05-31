@@ -8,7 +8,7 @@ body {
 }
 
 nav {
-    background-color: #707680; /* bg-gray-800 */
+    background-color: #FFFFFF; /* bg-gray-800 */
     color: white;
     padding: 8px; /* p-2 */
     position: fixed;
@@ -27,8 +27,9 @@ nav {
 }
 
 .nav-logo img {
-    height: 24px; /* h-6 */
-    width: 24px; /* w-6 */
+    margin-top: -10px;
+    height: 70px; /* Giảm kích thước logo để vừa với Navbar, tùy chỉnh nếu cần */
+    width: 100px; /* Giữ tỷ lệ */
     object-fit: contain;
 }
 
@@ -38,15 +39,16 @@ nav {
 }
 
 .nav-link {
-    font-weight: bold;
-    color: #3b82f6; /* text-blue-400 */
-    font-size: 14px; /* text-sm */
+    margin-top: -8px;
+    /* font-weight: bold; */
+    color: #090a0a; /* text-blue-400 */
+    font-size: 20px; /* text-sm */
     margin-left: 4px; /* ml-1 */
     text-decoration: none;
 }
 
 .nav-link:hover {
-    color: #60a5fa; /* text-blue-500 */
+    color: #d3d3d3; /* text-blue-500 */
 }
 
 .hamburger-button {

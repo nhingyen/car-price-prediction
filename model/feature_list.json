@@ -1,1 +1,0 @@
-{"numeric": ["car_age", "km_driven_log", "avg_km_per_year", "km_carage_interact"], "categorical": ["company", "model", "fuel_type", "seller_type", "transmission", "owner", "model_cluster", "company_fuel_owner"]}

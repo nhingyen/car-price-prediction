@@ -14,7 +14,7 @@
         <div class="container">
             <!-- Logo -->
             <div class="nav-logo">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo YourCarPredictor">
+                <img src="{{ url_for('static', filename='image/logo-car3.jpg') }}" alt="Logo YourCarPredictor">
             </div>
             <!-- Menu Desktop -->
             <div class="nav-menu-desktop">
@@ -36,7 +36,7 @@
         <!-- Banner -->
     <section class="banner">
         <div class="banner-overlay">
-            <img src="{{ url_for('static', filename='image/banner-car2.png') }}" alt="Banner Background" class="banner-image">
+            <img src="{{ url_for('static', filename='image/banner-car22.png') }}" alt="Banner Background" class="banner-image">
         </div>
     </section>
 
@@ -82,7 +82,7 @@
         <div class="container">
 
             <div class="card p-4 shadow-sm">
-                <form method="POST" class="row g-3">
+                <form method="POST" id="predict-form" class="row g-3">
                     <!-- Hãng xe -->
                     <div class="col-12 col-md-6">
                         <div class="mb-3">
@@ -176,7 +176,7 @@
                     </div>
                     <div>
                         {% if prediction %}
-            <div class="alert alert-success text-center mb-4">
+            <div id="prediction-result" class="alert alert-success text-center mb-4">
                 Giá dự đoán: <strong>{{ "{:,.0f}".format(prediction) }} VND</strong>
             </div>
             {% endif %}
@@ -192,15 +192,14 @@ const featureValues = {{ feature_values | tojson | safe }};
 document.addEventListener('DOMContentLoaded', function () {
     const companySelect = document.getElementById('company');
     const modelSelect = document.getElementById('model');
+    const form = document.getElementById('predict-form');
+    const resultDiv = document.getElementById('prediction-result');
 
+    // Cập nhật dòng xe khi chọn hãng xe
     companySelect.addEventListener('change', function () {
         const selectedCompany = this.value;
         const models = featureValues.model[selectedCompany] || [];
-
-        // Xóa các option hiện tại
         modelSelect.innerHTML = '<option value="">Chọn dòng xe</option>';
-
-        // Thêm các option mới
         models.forEach(function (model) {
             const option = document.createElement('option');
             option.value = model;
@@ -208,6 +207,36 @@ document.addEventListener('DOMContentLoaded', function () {
             modelSelect.appendChild(option);
         });
     });
+
+    // Gửi form bằng AJAX, không reload
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();  // Ngăn reload
+
+        const formData = new FormData(form);
+        const jsonData = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch("/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: JSON.stringify(jsonData)
+            });
+
+            const data = await response.json();
+            if (data.prediction) {
+                resultDiv.style.display = "block";
+                resultDiv.innerHTML = `Giá dự đoán: <strong>${Number(data.prediction).toLocaleString()} VND</strong>`;
+            }
+        } catch (err) {
+            console.error("Dự đoán lỗi:", err);
+            resultDiv.style.display = "block";
+            resultDiv.innerHTML = "Có lỗi xảy ra. Vui lòng thử lại.";
+        }
+    });
 });
 </script>
+
 </html>

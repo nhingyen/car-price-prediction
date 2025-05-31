@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import joblib
 import json
 import numpy as np
@@ -11,7 +11,7 @@ app = Flask(__name__)
 BASE_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(BASE_DIR, 'model', 'car_price_model.pkl')
 KMEANS_PATH = os.path.join(BASE_DIR, 'model', 'car_price_kmeans.pkl')
-FEATURES_PATH = os.path.join(BASE_DIR, 'model', 'feature_values.json')
+FEATURES_PATH = os.path.join(BASE_DIR, 'model/config/', 'feature_values.json')
 
 model = joblib.load(MODEL_PATH)
 kmeans = joblib.load(KMEANS_PATH)
@@ -22,17 +22,30 @@ with open(FEATURES_PATH, 'r') as f:
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # --- Lấy dữ liệu từ form ---
-        company = request.form['company']
-        model_input = request.form['model']
-        fuel_type = request.form['fuel_type']
-        seller_type = request.form['seller_type']
-        transmission = request.form['transmission']
-        owner = request.form['owner']
-        car_age = int(request.form['car_age'])
-        km_driven = int(request.form['km_driven'])
+        # --- Dữ liệu đầu vào ---
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            # Dữ liệu từ AJAX (JSON)
+            data = request.get_json()
+            company = data['company']
+            model_input = data['model']
+            fuel_type = data['fuel_type']
+            seller_type = data['seller_type']
+            transmission = data['transmission']
+            owner = data['owner']
+            car_age = int(data['car_age'])
+            km_driven = int(data['km_driven'])
+        else:
+            # Dữ liệu từ form truyền thống
+            company = request.form['company']
+            model_input = request.form['model']
+            fuel_type = request.form['fuel_type']
+            seller_type = request.form['seller_type']
+            transmission = request.form['transmission']
+            owner = request.form['owner']
+            car_age = int(request.form['car_age'])
+            km_driven = int(request.form['km_driven'])
 
-        # --- Tạo các feature bổ sung ---
+        # --- Feature bổ sung ---
         km_driven_log = np.log1p(km_driven)
         avg_km_per_year = km_driven / car_age
         km_carage_interact = km_driven_log * car_age
@@ -51,7 +64,7 @@ def index():
         cluster_encoded = cluster_encoded.reindex(columns=kmeans.feature_names_in_, fill_value=0)
         model_cluster = str(kmeans.predict(cluster_encoded)[0])
 
-        # --- Tạo DataFrame đầu vào ---
+        # --- DataFrame đầu vào ---
         input_df = pd.DataFrame([{
             'company': company,
             'model': model_input,
@@ -66,25 +79,19 @@ def index():
             'model_cluster': model_cluster,
             'company_fuel_owner': company_fuel_owner
         }])
-       
-        # # ✅ FIX: Chuyển object → category
-        # for col in input_df.select_dtypes(include='object').columns:
-        #     input_df[col] = input_df[col].astype('category')
-
-        # # --- Encode đầu vào giống lúc huấn luyện ---
-        # encoded_input = pd.get_dummies(input_df)
-        # encoded_input = encoded_input.reindex(columns=model.feature_names_in_, fill_value=0)
-
-        # # --- Dự đoán ---
-        # predicted_price = model.predict(encoded_input)[0]
 
         # --- Dự đoán ---
         predicted_price = model.predict(input_df)[0]
 
-        return render_template('index.html',
-                               prediction=int(predicted_price),
-                               feature_values=feature_values)
-    
+        # --- Trả kết quả tùy theo loại request ---
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({'prediction': int(predicted_price)})
+        else:
+            return render_template('index.html',
+                                   prediction=int(predicted_price),
+                                   feature_values=feature_values)
+
+    # --- GET request ---
     return render_template('index.html', feature_values=feature_values)
 
 if __name__ == '__main__':
