@@ -48,7 +48,6 @@
                     <!-- Lặp lại logo để tạo hiệu ứng chạy liên tục -->
                     <img src="{{ url_for('static', filename='image/toyota.jpg') }}" alt="Toyota" class="brand-logo">
                     <img src="{{ url_for('static', filename='image/suzuki.jpg') }}" alt="Suzuki" class="brand-logo">
-                    <img src="{{ url_for('static', filename='image/suzuki.jpg') }}" alt="Mercedes" class="brand-logo">
                     <img src="{{ url_for('static', filename='image/mercedes.jpg') }}" alt="BMW" class="brand-logo">
                     <img src="{{ url_for('static', filename='image/isuzu.jpg') }}" alt="Audi" class="brand-logo">
                     <img src="{{ url_for('static', filename='image/mazda.jpg') }}" alt="Honda" class="brand-logo">
@@ -61,7 +60,6 @@
                     <!-- Lặp lại để tạo hiệu ứng mượt -->
                     <img src="{{ url_for('static', filename='image/toyota.jpg') }}" alt="Toyota" class="brand-logo">
                     <img src="{{ url_for('static', filename='image/suzuki.jpg') }}" alt="Suzuki" class="brand-logo">
-                    <img src="{{ url_for('static', filename='image/suzuki.jpg') }}" alt="Mercedes" class="brand-logo">
                     <img src="{{ url_for('static', filename='image/mercedes.jpg') }}" alt="BMW" class="brand-logo">
                     <img src="{{ url_for('static', filename='image/isuzu.jpg') }}" alt="Audi" class="brand-logo">
                     <img src="{{ url_for('static', filename='image/mazda.jpg') }}" alt="Honda" class="brand-logo">
@@ -174,13 +172,15 @@
                     <div class="col-12 text-center">
                         <button type="submit" class="btn btn-primary">Dự đoán</button>
                     </div>
-                    <div>
+                    <!-- <div>
                         {% if prediction %}
             <div id="prediction-result" class="alert alert-success text-center mb-4">
                 Giá dự đoán: <strong>{{ "{:,.0f}".format(prediction) }} VND</strong>
             </div>
             {% endif %}
-                    </div>
+                    </div> -->
+                    <div id="prediction-result" class="alert alert-success text-center mb-4" style="display:none;"></div>
+
                 </form>
             </div>
         </div>
@@ -211,6 +211,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Gửi form bằng AJAX, không reload
     form.addEventListener('submit', async function (e) {
         e.preventDefault();  // Ngăn reload
+
+        // Kiểm tra car_age trước khi gửi
+        const carAge = parseInt(document.getElementById('car_age').value);
+        if (carAge > 30) {
+            resultDiv.style.display = "block";
+            resultDiv.innerHTML = "Số năm sử dụng không được vượt quá 30 năm.";
+            return; // Dừng gửi form nếu không hợp lệ
+        }
 
         const formData = new FormData(form);
         const jsonData = Object.fromEntries(formData.entries());

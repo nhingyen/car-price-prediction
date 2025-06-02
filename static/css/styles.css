@@ -215,6 +215,7 @@ nav {
 }
 
 .prediction-form-section .alert-success {
-    max-width: 600px;
+    max-width: 400px;
     margin: 0 auto 20px;
+    margin-top: 20px;
 }
